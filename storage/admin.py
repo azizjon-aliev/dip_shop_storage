@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, Counterparty
+from .models import Category, Product, Counterparty, OperationGroup, Operation
 from django.utils.safestring import mark_safe
 
 
@@ -91,6 +91,56 @@ class CounterpartyAdmin(admin.ModelAdmin):
             ),
         }),
     )
+    
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.created_by = request.user
+        obj.updated_by = request.user
+        obj.save()
+        
+        
+# use Operation inline for OperationGroup 
+class OperationInline(admin.TabularInline):
+    model = Operation
+    extra = 3
+    autocomplete_fields = ('product', )
+    readonly_fields = ('created_by', 'updated_by', 'created_at', 'updated_at', 'amount', 'action', )
+    fields = (
+        'product',
+        'price',
+        'quantity',
+        'discount',
+    )
+    
+    
+@admin.register(OperationGroup)
+class OperationGroup(admin.ModelAdmin):
+    """ Административная панель для модели OperationGroup."""
+    
+    autocomplete_fields = ('counterparty', )
+    list_display = ('counterparty', 'action', "created_at", )
+    search_fields = ('counterparty__full_name', )
+    readonly_fields = ('created_by', 'updated_by', 'created_at', 'updated_at', )
+    list_filter = ('action', 'counterparty', )
+    inlines = [OperationInline, ]
+    
+    
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.created_by = request.user
+        obj.updated_by = request.user
+        obj.save()
+        
+        
+@admin.register(Operation)
+class OperationAdmin(admin.ModelAdmin):
+    """ Административная панель для модели Operation."""
+    
+    autocomplete_fields = ('product', 'operation_group', )
+    list_display = ('product', 'operation_group', 'amount', 'created_at', )
+    search_fields = ('product__name', )
+    readonly_fields = ('created_by', 'updated_by', 'created_at', 'updated_at', )
+    list_filter = ('product', 'operation_group', )
     
     def save_model(self, request, obj, form, change):
         if not obj.pk:

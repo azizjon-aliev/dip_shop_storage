@@ -60,4 +60,59 @@ class Counterparty(models.Model):
     updated_by = models.ForeignKey(User, verbose_name="Кто изменил", on_delete=models.SET_NULL, related_name="%(class)s_updated_by", blank=True, null=True)
     
     def __str__(self) -> str:
-        return self.name
+        return self.full_name
+    
+    
+class Action(models.IntegerChoices):
+    DEBIT = 1, "Дебет"
+    CREDIT = 2, "Кредит"
+
+    
+class OperationGroup(models.Model):
+    """Model operation group"""
+    
+    class Meta:
+        ordering = ("-id",)
+        verbose_name = "Группа операций"
+        verbose_name_plural = "Группы операций"
+        
+    counterparty = models.ForeignKey(Counterparty, verbose_name="Контрагент", on_delete=models.CASCADE)
+    action = models.IntegerField(verbose_name="Действие", choices=Action.choices)
+    comment = models.TextField(verbose_name="Комментарий", blank=True)
+    created_at = models.DateTimeField(verbose_name="Время создания", auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name="Время изменения", auto_now=True)
+    created_by = models.ForeignKey(User, verbose_name="Кто создал", on_delete=models.SET_NULL, related_name="%(class)s_created_by", blank=True, null=True)
+    updated_by = models.ForeignKey(User, verbose_name="Кто изменил", on_delete=models.SET_NULL, related_name="%(class)s_updated_by", blank=True, null=True)
+    
+    def __str__(self) -> str:
+        return self.counterparty.full_name
+    
+    
+class Operation(models.Model):
+    """Model operation"""
+    
+    class Meta:
+        ordering = ("-id",)
+        verbose_name = "Операция"
+        verbose_name_plural = "Операции"
+        
+    product = models.ForeignKey(Product, verbose_name="Товар", on_delete=models.CASCADE)
+    operation_group = models.ForeignKey(OperationGroup, verbose_name="Группа операций", on_delete=models.CASCADE)
+    quantity = models.IntegerField(verbose_name="Количество")
+    price = models.DecimalField(verbose_name="Цена", max_digits=10, decimal_places=2)
+    discount = models.DecimalField(verbose_name="Скидка", max_digits=10, decimal_places=2, default=0)
+    created_at = models.DateTimeField(verbose_name="Время создания", auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name="Время изменения", auto_now=True)
+    created_by = models.ForeignKey(User, verbose_name="Кто создал", on_delete=models.SET_NULL, related_name="%(class)s_created_by", blank=True, null=True)
+    updated_by = models.ForeignKey(User, verbose_name="Кто изменил", on_delete=models.SET_NULL, related_name="%(class)s_updated_by", blank=True, null=True)
+    
+    @property
+    def amount(self) -> float:
+        return self.quantity * self.price * (1 - self.discount / 100)
+    
+    @property
+    def action(self) -> int:
+        return self.operation_group.action
+    
+    def __str__(self) -> str:
+        return self.product.name
