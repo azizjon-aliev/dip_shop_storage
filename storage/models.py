@@ -1,5 +1,8 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
+
+User = get_user_model()
 
 class Category(models.Model):
     """Model category for product"""
@@ -18,20 +21,22 @@ class Category(models.Model):
         return self.name
     
     
+class Product(models.Model):
+    """Model product"""
     
-# created_by = models.ForeignKey(
-#         "accounts.User",
-#         verbose_name="Кто создал",
-#         on_delete=models.SET_NULL,
-#         related_name="%(class)s_created_by",
-#         blank=True,
-#         null=True,
-#     )
-#     updated_by = models.ForeignKey(
-#         "accounts.User",
-#         verbose_name="Кто изменил",
-#         on_delete=models.SET_NULL,
-#         related_name="%(class)s_updated_by",
-#         blank=True,
-#         null=True,
-#     )
+    class Meta:
+        ordering = ("-id",)
+        verbose_name = "Продукт"
+        verbose_name_plural = "Продукты"
+        
+    image = models.ImageField(upload_to="products/", verbose_name="Изображение", blank=True, null=True)
+    name = models.CharField(verbose_name="Название", max_length=200)
+    description = models.TextField(verbose_name="Описание", blank=True, null=True)
+    category = models.ForeignKey(Category, verbose_name="Категория", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(verbose_name="Время создания", auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name="Время изменения", auto_now=True)
+    created_by = models.ForeignKey(User, verbose_name="Кто создал", on_delete=models.SET_NULL, related_name="%(class)s_created_by", blank=True, null=True)
+    updated_by = models.ForeignKey(User, verbose_name="Кто изменил", on_delete=models.SET_NULL, related_name="%(class)s_updated_by", blank=True, null=True)
+    
+    def __str__(self) -> str:
+        return self.name
