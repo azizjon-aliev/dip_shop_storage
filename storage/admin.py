@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product
+from .models import Category, Product, Counterparty
 from django.utils.safestring import mark_safe
 
 
@@ -61,3 +61,39 @@ class ProductAdmin(admin.ModelAdmin):
         
     show_image.short_description = 'Изображение'
     
+    
+@admin.register(Counterparty)
+class CounterpartyAdmin(admin.ModelAdmin):
+    """ Административная панель для модели Counterparty.
+    """
+    
+    list_display = ('full_name', 'phone', 'company_name', 'created_at', )
+    search_fields = ('full_name', 'phone', 'company_name', )
+    readonly_fields = ('created_by', 'updated_by', 'created_at', 'updated_at', )
+    fieldsets = (
+        ('Информация', {
+            "fields": (
+                "full_name",
+                "phone",
+                "company_name",
+            )},
+        ),
+        ("Время", {
+            "fields": (
+                "created_at",
+                "updated_at",
+            ),
+        }),
+        ("Автор", {
+            "fields": (
+                "created_by",
+                "updated_by",
+            ),
+        }),
+    )
+    
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.created_by = request.user
+        obj.updated_by = request.user
+        obj.save()
