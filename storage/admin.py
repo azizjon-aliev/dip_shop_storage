@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Category, Product
+from django.utils.safestring import mark_safe
 
 
 @admin.register(Category)
@@ -19,14 +20,44 @@ class ProductAdmin(admin.ModelAdmin):
     """
     
     search_fields = ('name', 'category__name', )
-    list_display = ('name', 'category', 'created_at', )
-    readonly_fields = ('created_at', 'updated_at', 'created_by', 'updated_by', )
+    list_display = ('name', 'show_image', 'category', 'created_at', )
+    readonly_fields = ('show_image', 'created_at', 'updated_at', 'created_by', 'updated_by', )
     autocomplete_fields = ('category', )
     list_filter = ('category', )
+    fieldsets = (
+        ('Информация', {
+            "fields": (
+                'show_image',
+                "image",
+                "name",
+                "description",
+                "category",
+            )},
+        ),
+        ("Время", {
+            "fields": (
+                "created_at",
+                "updated_at",
+            ),
+        }),
+        ("Автор", {
+            "fields": (
+                "created_by",
+                "updated_by",
+            ),
+        }),
+    )
     
+
+    def show_image(self, obj):
+        if bool(obj.image):
+            return mark_safe('<img src="{}" width="50" height="50" />'.format(obj.image.url))
+
     def save_model(self, request, obj, form, change):
         if not obj.pk:
             obj.created_by = request.user
         obj.updated_by = request.user
         obj.save()
+        
+    show_image.short_description = 'Изображение'
     
