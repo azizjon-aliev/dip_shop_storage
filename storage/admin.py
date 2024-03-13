@@ -4,6 +4,13 @@ from django.utils.safestring import mark_safe
 from django.db.models import Sum
 from .utils import get_remaining_product
 
+
+
+admin.site.site_header = "Склад магазина - ALive"
+
+admin.site.index_title = "Добро пожаловать на склад магазина - ALive"
+
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     """ Административная панель для модели Category.
