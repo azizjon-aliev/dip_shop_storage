@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import Category, Product, Counterparty, OperationGroup, Operation
 from django.utils.safestring import mark_safe
-
+from django.db.models import Sum
+from .utils import get_remaining_product
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -20,7 +21,7 @@ class ProductAdmin(admin.ModelAdmin):
     """
     
     search_fields = ('name', 'category__name', )
-    list_display = ('name', 'show_image', 'category', 'created_at', )
+    list_display = ('name', 'get_remaining',  'show_image', 'category', 'created_at', )
     readonly_fields = ('show_image', 'created_at', 'updated_at', 'created_by', 'updated_by', )
     autocomplete_fields = ('category', )
     list_filter = ('category', )
@@ -49,6 +50,10 @@ class ProductAdmin(admin.ModelAdmin):
     )
     
 
+    def get_remaining(self, obj):
+        return get_remaining_product(product=obj)
+    
+    
     def show_image(self, obj):
         if bool(obj.image):
             return mark_safe('<img src="{}" width="50" height="50" />'.format(obj.image.url))
@@ -59,7 +64,8 @@ class ProductAdmin(admin.ModelAdmin):
         obj.updated_by = request.user
         obj.save()
         
-    show_image.short_description = 'Изображение'
+    get_remaining.short_description = 'остатка'
+    show_image.short_description = 'изображение'
     
     
 @admin.register(Counterparty)
@@ -118,29 +124,28 @@ class OperationGroup(admin.ModelAdmin):
     """ Административная панель для модели OperationGroup."""
     
     autocomplete_fields = ('counterparty', )
-    list_display = ('counterparty', 'action', "created_at", )
+    list_display = ('counterparty', 'quantity_product',  'amount_product', 'action', "created_at", )
+    list_filter = ('action', 'counterparty', )
     search_fields = ('counterparty__full_name', )
     readonly_fields = ('created_by', 'updated_by', 'created_at', 'updated_at', )
-    list_filter = ('action', 'counterparty', )
     inlines = [OperationInline, ]
+
+
+    def quantity_product(self, obj) -> int:
+        if obj.operation_set.exists():
+            return Operation.objects.filter(operation_group=obj).values_list('quantity', flat=True).aggregate(total_quantity=Sum('quantity')).get('total_quantity')
+        return 0
+    
+    def amount_product(self, obj) -> float:
+        if obj.operation_set.exists():
+            amount = sum([i.amount for i in Operation.objects.filter(operation_group=obj)])
+            return round(amount, 2)
+        return 0.00
+
+    amount_product.short_description = "Общая сумма товаров"
+    quantity_product.short_description = "Количество товаров"
     
     
-    def save_model(self, request, obj, form, change):
-        if not obj.pk:
-            obj.created_by = request.user
-        obj.updated_by = request.user
-        obj.save()
-        
-        
-@admin.register(Operation)
-class OperationAdmin(admin.ModelAdmin):
-    """ Административная панель для модели Operation."""
-    
-    autocomplete_fields = ('product', 'operation_group', )
-    list_display = ('product', 'operation_group', 'amount', 'created_at', )
-    search_fields = ('product__name', )
-    readonly_fields = ('created_by', 'updated_by', 'created_at', 'updated_at', )
-    list_filter = ('product', 'operation_group', )
     
     def save_model(self, request, obj, form, change):
         if not obj.pk:

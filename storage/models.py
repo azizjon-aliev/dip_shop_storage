@@ -39,7 +39,9 @@ class Product(models.Model):
     updated_by = models.ForeignKey(User, verbose_name="Кто изменил", on_delete=models.SET_NULL, related_name="%(class)s_updated_by", blank=True, null=True)
     
     def __str__(self) -> str:
-        return self.name
+        from .utils import get_remaining_product
+        
+        return f"{self.name} ( {get_remaining_product(product=self)} )"
     
     
 
@@ -64,8 +66,8 @@ class Counterparty(models.Model):
     
     
 class Action(models.IntegerChoices):
-    DEBIT = 1, "Дебет"
-    CREDIT = 2, "Кредит"
+    SALE = 1, "Продажа"
+    RECEIPT = 2, "Прием"
 
     
 class OperationGroup(models.Model):
@@ -84,8 +86,10 @@ class OperationGroup(models.Model):
     created_by = models.ForeignKey(User, verbose_name="Кто создал", on_delete=models.SET_NULL, related_name="%(class)s_created_by", blank=True, null=True)
     updated_by = models.ForeignKey(User, verbose_name="Кто изменил", on_delete=models.SET_NULL, related_name="%(class)s_updated_by", blank=True, null=True)
     
+    
     def __str__(self) -> str:
-        return self.counterparty.full_name
+        action = 'Продажа' if self.action == Action.SALE else 'Прием'
+        return f"{self.counterparty.full_name} {action}"
     
     
 class Operation(models.Model):
@@ -114,5 +118,5 @@ class Operation(models.Model):
     def action(self) -> int:
         return self.operation_group.action
     
-    def __str__(self) -> str:
-        return self.product.name
+    def __str__(self) -> str:        
+        return f"{self.product.name}"
