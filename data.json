@@ -263,7 +263,7 @@
             "pk": 3,
             "fields": {
                 "counterparty": 3, 
-                "action": 1,  
+                "action": 2,  
                 "comment": "Продажа зеркальной камеры Canon EOS 5D Mark IV",
                 "created_at": "2024-03-14T15:30:00Z",
                 "updated_at": "2024-03-14T14:45:00Z",
