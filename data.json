@@ -1,0 +1,170 @@
+[
+    {
+        "model": "storage.Category",
+        "pk": 1,
+        "fields": {
+            "name": "Электроника",
+            "created_at": "2024-03-13T00:00:00Z",
+            "updated_at": "2024-03-13T00:00:00Z"
+        }
+    },
+    {
+        "model": "storage.Category",
+        "pk": 2,
+        "fields": {
+            "name": "Одежда и обувь",
+            "created_at": "2024-03-13T00:00:00Z",
+            "updated_at": "2024-03-13T00:00:00Z"
+        }
+    },
+    {
+        "model": "storage.Category",
+        "pk": 3,
+        "fields": {
+            "name": "Дом и сад",
+            "created_at": "2024-03-13T00:00:00Z",
+            "updated_at": "2024-03-13T00:00:00Z"
+        }
+    },
+    {
+        "model": "storage.Category",
+        "pk": 4,
+        "fields": {
+            "name": "Спорт и фитнес",
+            "created_at": "2024-03-13T00:00:00Z",
+            "updated_at": "2024-03-13T00:00:00Z"
+        }
+    },
+    {
+        "model": "storage.Category",
+        "pk": 5,
+        "fields": {
+            "name": "Красота и здоровье",
+            "created_at": "2024-03-13T00:00:00Z",
+            "updated_at": "2024-03-13T00:00:00Z"
+        }
+    },
+    {
+        "model": "storage.Category",
+        "pk": 6,
+        "fields": {
+            "name": "Автомобили и мотоциклы",
+            "created_at": "2024-03-13T00:00:00Z",
+            "updated_at": "2024-03-13T00:00:00Z"
+        }
+    },
+    {
+        "model": "storage.Category",
+        "pk": 7,
+        "fields": {
+            "name": "Игрушки и хобби",
+            "created_at": "2024-03-13T00:00:00Z",
+            "updated_at": "2024-03-13T00:00:00Z"
+        }
+    },
+    {
+        "model": "storage.Category",
+        "pk": 8,
+        "fields": {
+            "name": "Книги и образование",
+            "created_at": "2024-03-13T00:00:00Z",
+            "updated_at": "2024-03-13T00:00:00Z"
+        }
+    },
+    {
+        "model": "storage.Category",
+        "pk": 9,
+        "fields": {
+            "name": "Искусство и коллекционирование",
+            "created_at": "2024-03-13T00:00:00Z",
+            "updated_at": "2024-03-13T00:00:00Z"
+        }
+    },
+    {
+        "model": "storage.Category",
+        "pk": 10,
+        "fields": {
+            "name": "Путешествия и туризм",
+            "created_at": "2024-03-13T00:00:00Z",
+            "updated_at": "2024-03-13T00:00:00Z"
+        }
+    },
+    {
+        "model": "storage.Product",
+        "pk": 1,
+        "fields": {
+            "name": "Ноутбук Dell XPS 13",
+            "description": "Мощный ноутбук с тонким корпусом и высоким разрешением экрана.",
+            "category": 1,
+            "created_at": "2024-03-13T12:00:00Z",
+            "updated_at": "2024-03-13T12:30:00Z",
+            "created_by": 1,  
+            "updated_by": 1  
+        }
+    },
+    {
+        "model": "storage.Product",
+        "pk": 2,
+        "fields": {
+            "name": "Кроссовки Nike Air Max",
+            "description": "Удобные и стильные кроссовки для активного образа жизни.",
+            "category": 2,
+            "created_at": "2024-03-13T13:00:00Z",
+            "updated_at": "2024-03-13T13:15:00Z",
+            "created_by": 1,  
+            "updated_by": 1  
+        }
+    },
+    {
+        "model": "storage.Product",
+        "pk": 3,
+        "fields": {
+            "name": "Кофеварка De'Longhi",
+            "description": "Элегантная кофеварка с функцией приготовления капучино.",
+            "category": 3,
+            "created_at": "2024-03-13T14:00:00Z",
+            "updated_at": "2024-03-13T14:30:00Z",
+            "created_by": 1,
+            "updated_by": 1
+        }
+    },
+    {
+        "model": "storage.Product",
+        "pk": 4,
+        "fields": {
+            "name": "Ноутбук HP Pavilion",  
+            "description": "Мощный ноутбук с высоким разрешением экрана и быстрым процессором.",
+            "category": 1,  
+            "created_at": "2024-03-13T12:00:00Z",
+            "updated_at": "2024-03-13T12:30:00Z",
+            "created_by": 1,  
+            "updated_by": 1
+        }
+    },
+    {
+        "model": "storage.Product",
+        "pk": 5,
+        "fields": {
+            "name": "Беспроводные наушники Sony WH-1000XM4",  
+            "description": "Отмена шума, кристально чистый звук и длительное время работы от батареи.",
+            "category": 5,  
+            "created_at": "2024-03-13T13:15:00Z",
+            "updated_at": "2024-03-13T13:45:00Z",
+            "created_by": 1,  
+            "updated_by": 1
+        }
+    },
+    {
+        "model": "storage.Product",
+        "pk": 6,
+        "fields": {
+            "name": "Зеркальная камера Canon EOS 5D Mark IV",  
+            "description": "Профессиональная камера с высоким разрешением и множеством функций для фотографов.",
+            "category": 1,  
+            "created_at": "2024-03-13T14:30:00Z",
+            "updated_at": "2024-03-13T15:00:00Z",
+            "created_by": 1,  
+            "updated_by": 1
+        }
+    }
+]

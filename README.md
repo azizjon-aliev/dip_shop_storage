@@ -6,3 +6,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 python manage.py initadmin
+
+python manage.py loaddata data.json
+
+python manage.py runserver
